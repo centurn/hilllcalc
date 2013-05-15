@@ -15,4 +15,10 @@
 #VC
 *.sdf
 *.suo
+*.exe
+*.pdb
+*.ilk
+*.filters
+*.user
+hillcalc/Debug
 ipch

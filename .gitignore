@@ -20,5 +20,6 @@
 *.ilk
 *.filters
 *.user
+*.opensdf
 hillcalc/Debug
 ipch

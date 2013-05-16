@@ -1,4 +1,5 @@
 #include "track.h"
+#include "prog_params.h"
 
 #include <io.h>
 #include <fstream>
@@ -54,7 +55,6 @@ float track::calcAscendStupid() const{
 	return result;
 }
 
-static const float epsilon = 5;
 float track::calcHills() const{
 	if(m_data.size() < 2)
 		return 0;
@@ -69,7 +69,7 @@ float track::calcHills() const{
 	// Initial set up. We don't know if it's uphill or downhill yet
 	for(; i < end; ++i){
 		float diff = m_data[i].ele - prev_extremum;
-		if(fabs(diff) > epsilon){
+		if(fabs(diff) > g_params.hills_epsilon){
 			cur_extremum = m_data[i].ele;
 			direction = !(*((uint*)(&diff))&(1<<31));// That masks sign bit in floating point. Positive diff means we are doing up
 			break;
@@ -87,7 +87,7 @@ float track::calcHills() const{
 
 		// Direction changed. If the change is deep enough, it's time to go for next hill
 		float diff = m_data[i].ele - cur_extremum;
-		if(fabs(diff) > epsilon){// diff here can only be in revese direction, else we pass prev check
+		if(fabs(diff) > g_params.hills_epsilon){// diff here can only be in revese direction, else we pass prev check
 			if(direction)
 				result += cur_extremum - prev_extremum;
 

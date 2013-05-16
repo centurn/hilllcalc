@@ -77,12 +77,14 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="prog_params.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="track.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="hillcalc.cpp" />
+    <ClCompile Include="prog_params.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="track.cpp" />
   </ItemGroup>

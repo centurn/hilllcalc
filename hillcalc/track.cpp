@@ -11,10 +11,6 @@ static char const* lineskip(char const* str){
 
 #pragma warning(disable: 4996)
 void track::fromGarminText(char const* file){
-	//std::fstream fil;
-	//fil.open(
-	
-
 	FILE* f = fopen(file, "r");
 	if(f){
 		fseek(f, 0, SEEK_END);
@@ -50,7 +46,7 @@ float track::calcAscendStupid() const{
 	float prev = m_data[0].ele; 
 	for(int i = 1, end = m_data.size(); i< end; ++i){
 		float diff = m_data[i].ele - prev;
-		if(diff > 0)
+		if(diff > 0.1f)
 			result += diff;
 		prev = m_data[i].ele;
 	}
@@ -63,20 +59,47 @@ float track::calcHills() const{
 	if(m_data.size() < 2)
 		return 0;
 
+	float result = 0;
 	float prev_extremum = m_data[0].ele;
 	float cur_extremum = 0;
-	int direction = 1;
+
+	int direction = 0;// Altitude change. 0 for down, 1 for up
 	int i = 1, end = m_data.size();
 	
+	// Initial set up. We don't know if it's uphill or downhill yet
 	for(; i < end; ++i){
 		float diff = m_data[i].ele - prev_extremum;
 		if(fabs(diff) > epsilon){
 			cur_extremum = m_data[i].ele;
-			direction = diff
+			direction = !(*((uint*)(&diff))&(1<<31));// That masks sign bit in floating point. Positive diff means we are doing up
 			break;
 		}
 	}
 
-	for(; i < end; ++i){
+	for(++i; i < end; ++i){
+		float cur = m_data[i].ele;
+
+		// Check if we continue deeper in the same direction (up or down)
+		if(direction? cur > cur_extremum: cur < cur_extremum){
+			cur_extremum = cur;
+			continue;
+		}
+
+		// Direction changed. If the change is deep enough, it's time to go for next hill
+		float diff = m_data[i].ele - cur_extremum;
+		if(fabs(diff) > epsilon){// diff here can only be in revese direction, else we pass prev check
+			if(direction)
+				result += cur_extremum - prev_extremum;
+
+			prev_extremum = cur_extremum;
+			cur_extremum = cur;
+			direction = !direction;
+		}
 	}
+
+	// Add the final ascend here
+	if(direction)
+		result += cur_extremum - prev_extremum;
+
+	return result;
 }

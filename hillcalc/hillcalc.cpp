@@ -8,10 +8,10 @@
 int _tmain(int argc, _TCHAR* argv[])
 {
 	track trk;
-	float ascendStupid;
 
 	trk.fromGarminText("D:\\temp\\2012_02_29.txt");
-	ascendStupid = trk.calcAscendStupid();
+	float ascendStupid = trk.calcAscendStupid();
+	float ascendHills = trk.calcHills();
 
 	return 0;
 }

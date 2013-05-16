@@ -54,7 +54,7 @@ float track::calcAscendStupid() const{
 	return result;
 }
 
-static const float epsilon = 3.5f;
+static const float epsilon = 5;
 float track::calcHills() const{
 	if(m_data.size() < 2)
 		return 0;

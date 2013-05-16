@@ -103,3 +103,17 @@ float track::calcHills() const{
 
 	return result;
 }
+
+void track::filterSmooth(){
+	if(m_data.size() < 2)
+		return;
+
+	float coeff_reverse = 1-g_params.smooth_coeff;
+
+	float prev = m_data[0].ele; 
+	for(int i = 1, end = m_data.size(); i< end; ++i){
+		float cur = m_data[i].ele * g_params.smooth_coeff + prev * coeff_reverse;
+		m_data[i].ele = cur;
+		prev = cur;
+	}
+}

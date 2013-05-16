@@ -19,6 +19,8 @@ public:
 	float calcAscendStupid() const;
 	float calcHills() const;
 
+	void filterSmooth();
+
 private:
 	trkdata m_data;
 };

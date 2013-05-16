@@ -10,7 +10,13 @@ void parse_params(int argc, _TCHAR* argv[]){
 			case 'e':
 				sscanf(&argv[0][2], "%f", &g_params.hills_epsilon); break;
 			case 'k':
-				sscanf(&argv[0][2], "%f", &g_params.smooth_coeff); break;
+				float temp;
+				sscanf(&argv[0][2], "%f", &temp); 
+				if(temp < 0 || temp > 1)
+					printf("Smooth coeff should be between 1 and 0. Ignored\n");
+				else 
+					g_params.smooth_coeff = temp;
+				break;
 			case 'l':
 				g_params.log = true; break;
 			default:

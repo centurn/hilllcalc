@@ -2,7 +2,6 @@
 
 prog_params g_params;
 
-#pragma warning(disable: 4996)
 void parse_params(int argc, _TCHAR* argv[]){
 	for(--argc, ++argv; argc; --argc, ++argv){
 		if(argv[0][0] == '-'){

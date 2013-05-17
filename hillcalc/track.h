@@ -3,11 +3,12 @@
 typedef unsigned int uint;
 
 struct trkpoint{
-	uint  ID;
-	uint  trksegID;
-	float lat;
-	float lon;
-	float ele;
+	uint	ID;
+	uint	trksegID;
+	float	lat;
+	float	lon;
+	float	ele;
+	time_t	timestamp;
 };
 
 class track{

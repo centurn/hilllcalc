@@ -1,6 +1,9 @@
 #include "track.h"
 #include "prog_params.h"
 
+#include "strptime.h"
+#include <time.h>
+
 #include <io.h>
 #include <fstream>
 #include <iostream>
@@ -10,9 +13,24 @@ static char const* lineskip(char const* str){
 	return result? result+1: "";
 }
 
-#pragma warning(disable: 4996)
+static bool
+parse_date_and_time(char* str, time_t* value)
+{
+  struct tm tm;
+
+  memset(&tm, 0, sizeof(tm));
+  if(!strptime(str, " %Y-%m-%dT%H:%M:%SZ", &tm))
+	  return false;
+
+  *value = mktime(&tm);
+  return true;
+}
+
+
+
 void track::fromGarminText(char const* file){
 	FILE* f = fopen(file, "r");
+	char datebuff[32];
 	if(f){
 		fseek(f, 0, SEEK_END);
 		long size = ftell(f);
@@ -32,7 +50,8 @@ void track::fromGarminText(char const* file){
 
 		while(*pos){
 			trkpoint temp;
-			sscanf(pos, "%u %u %f %f %f", &temp.ID, &temp.trksegID, &temp.lat, &temp.lon, &temp.ele);
+			sscanf(pos, "%u %u %f %f %f %s", &temp.ID, &temp.trksegID, &temp.lat, &temp.lon, &temp.ele, datebuff);
+			parse_date_and_time(datebuff, &temp.timestamp);
 			pos = lineskip(pos);
 			m_data.push_back(temp);
 		}

@@ -63,11 +63,20 @@ float track::calcAscendStupid() const{
 		return 0;
 
 	float result = 0;
-	float prev = m_data[0].ele; 
+	float prev = m_data[0].ele;
+	double vspeedmax = 0;
+	int maxpos = 0;
 	for(int i = 1, end = m_data.size(); i< end; ++i){
 		float diff = m_data[i].ele - prev;
-		if(diff > 0.1f)
+		double timedelta = difftime(m_data[i].timestamp, m_data[i-1].timestamp);
+		if(diff > 0.1f){
+			double vspeed = diff/timedelta;
+			if(vspeed > vspeedmax){
+				vspeedmax = vspeed;
+				maxpos = i;
+			}
 			result += diff;
+		}
 		prev = m_data[i].ele;
 	}
 
